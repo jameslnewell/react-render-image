@@ -51,7 +51,7 @@ A `function` called when the image cannot be loaded.
 
 #### children
 
-A `function` called to render a `ReactNode` when the image is loading, loaded or errored.
+The `function` called to render something when the image is loading, loaded or errored.
 
 **Parameters:**
 
