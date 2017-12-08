@@ -45,7 +45,7 @@ A `string`. The image URL.
 
 A `function` called when the image is loaded.
 
-#### onLoad
+#### onError
 
 A `function` called when the image cannot be loaded.
 
