@@ -2,18 +2,18 @@ declare module 'react-render-image' {
 
   import * as React from 'react';
 
-  export interface ImageRenderProps {
+  export interface ImageProps {
     src: string;
     onLoad?: () => void;
     onError?: () => void;
     children: (status: {
-      image?: Image;
+      image?: HTMLImageElement;
       loaded: boolean;
       errored: boolean;
     }) => React.ReactNode;
   }
 
-  export default class ImageRender extends React.Component<ImageRenderProps, any> {
+  export default class Image extends React.Component<ImageProps, any> {
   }
 
 }
