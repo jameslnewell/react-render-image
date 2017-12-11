@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageLoader from 'react-render-image';
+import Image from 'react-render-image';
 
 const defaultSrc = 'https://funnygoblin.com/wp-content/uploads/2017/07/Meme-Flashback-These-Are-The-Best-Memes-From-The-Decade-2000-2010.jpg';
 
@@ -28,7 +28,7 @@ export default class App extends React.Component {
         <input autoFocus onKeyPress={this.handleSubmit} defaultValue={defaultSrc} style={{width: '340px'}}/>
         <br/>
 
-        <ImageLoader src={src}>
+        <Image src={src}>
           {({image, loaded, errored}) => {
             return (
               <div>
@@ -48,7 +48,7 @@ export default class App extends React.Component {
               </div>
             );
           }}
-        </ImageLoader>
+        </Image>
 
       </div>
     );
