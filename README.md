@@ -20,8 +20,7 @@ import Image from 'react-render-image';
   {({image, loaded, errored}) => {
 
     if (loaded) {
-      return (
-        <img src={src} width={image.width} height={image.height}/>;
+      return <img src={src} width={image.width} height={image.height}/>;
     }
 
     if (errored) {

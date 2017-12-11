@@ -1,6 +1,6 @@
 {
   "name": "react-render-image",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Render an image in React using a render prop.",
   "keywords": [
     "react",
