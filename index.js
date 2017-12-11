@@ -18281,9 +18281,9 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactImageRender = __webpack_require__(28);
+var _reactRenderImage = __webpack_require__(28);
 
-var _reactImageRender2 = _interopRequireDefault(_reactImageRender);
+var _reactRenderImage2 = _interopRequireDefault(_reactRenderImage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18332,13 +18332,13 @@ var App = function (_React$Component) {
         _react2.default.createElement(
           'h1',
           null,
-          'react-image-render'
+          'react-render-image'
         ),
         _react2.default.createElement('br', null),
         _react2.default.createElement('input', { autoFocus: true, onKeyPress: this.handleSubmit, defaultValue: defaultSrc, style: { width: '340px' } }),
         _react2.default.createElement('br', null),
         _react2.default.createElement(
-          _reactImageRender2.default,
+          _reactRenderImage2.default,
           { src: src },
           function (_ref2) {
             var image = _ref2.image,
