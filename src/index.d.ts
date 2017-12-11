@@ -1,4 +1,4 @@
-declare module 'react-image-render' {
+declare module 'react-render-image' {
 
   import * as React from 'react';
 

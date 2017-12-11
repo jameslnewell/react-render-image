@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageLoader from 'react-image-render';
+import ImageLoader from 'react-render-image';
 
 const defaultSrc = 'https://funnygoblin.com/wp-content/uploads/2017/07/Meme-Flashback-These-Are-The-Best-Memes-From-The-Decade-2000-2010.jpg';
 
@@ -22,7 +22,7 @@ export default class App extends React.Component {
     const {src} = this.state;
     return (
       <div>
-        <h1>react-image-render</h1>
+        <h1>react-render-image</h1>
 
         <br/>
         <input autoFocus onKeyPress={this.handleSubmit} defaultValue={defaultSrc} style={{width: '340px'}}/>

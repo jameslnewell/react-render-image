@@ -1,22 +1,22 @@
-# react-image-render
+# react-render-image
 
-Load and render an image with react.
+Render an image in React using a render prop.
 
 ## Installation
 
 ```
-npm install --save react-image-render
+npm install --save react-render-image
 ```
 
 ## Usage
 
-[Example](https://jameslnewell.github.io/react-image-render/) ([source](https://github.com/jameslnewell/react-image-render/blob/master/example/App.js#L31))
+[Example](https://jameslnewell.github.io/react-render-image/) ([source](https://github.com/jameslnewell/react-render-image/blob/master/example/App.js#L31))
 
 ```js
 import React from 'react';
-import ImageLoader from 'react-image-render';
+import Image from 'react-render-image';
 
-<ImageLoader src={src}>
+<Image src={src}>
   {({image, loaded, errored}) => {
 
     if (loaded) {
@@ -30,7 +30,7 @@ import ImageLoader from 'react-image-render';
 
     return <span>Loading...</span>;
   }}
-</ImageLoader>
+</Image>
 ```
 
 ## API

@@ -20,12 +20,12 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'react-image-render': path.resolve('./src')
+      'react-render-image': path.resolve('./src')
     }
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'react-image-render',
+      title: 'react-render-image',
       filename: './index.html',
       templateContent: '<div id="app"/>'
     })
