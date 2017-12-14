@@ -12,7 +12,7 @@ npm install --save react-render-image
 
 ## Usage
 
-[Example](https://jameslnewell.github.io/react-render-image/) ([source](https://github.com/jameslnewell/react-render-image/blob/master/example/App.js#L31))
+[Example](https://jameslnewell.github.io/react-render-image/) ([source](https://github.com/jameslnewell/react-render-image/blob/master/example/App.js))
 
 ```js
 import React from 'react';
