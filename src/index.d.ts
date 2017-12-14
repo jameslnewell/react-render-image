@@ -6,7 +6,7 @@ declare module 'react-render-image' {
     loading?: React.ReactNode;
     loaded?: React.ReactNode;
     errored?: React.ReactNode;
-    children: (
+    children?: (
       status: {
         image?: HTMLImageElement;
         loaded: boolean;
