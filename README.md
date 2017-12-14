@@ -57,13 +57,7 @@ Rendered when the image is `errored`.
 
 #### children
 
-> `({
-
-    image?: Image;
-    loaded: boolean;
-    errored: boolean;
-
-}) => React.Node`
+> `({ image?: Image; loaded: boolean; errored: boolean; }) => React.Node`
 
 Called to render something when the image is `loading`, `loaded` or `errored`.
 
