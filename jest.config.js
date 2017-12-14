@@ -2,6 +2,6 @@ module.exports = {
   setupFiles: ['./src/_.test.js'],
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/', //ignore the node_modules
-    '<rootDir>/src/_\\.test\\.js$', //ignore the test setup file
-  ],
-}
+    '<rootDir>/src/_\\.test\\.js$' //ignore the test setup file
+  ]
+};

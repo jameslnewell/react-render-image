@@ -1,9 +1,9 @@
 {
   "env": {
-    "es5": {
+    "cjs": {
       "presets": ["env", "react", "stage-0", "flow"]
     },
-    "esnext": {
+    "esm": {
       "presets": [["env", {"modules": false}], "react", "stage-0", "flow"]
     },
     "test": {

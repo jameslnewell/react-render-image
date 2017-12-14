@@ -6,57 +6,56 @@ declare class Image {
   src: string;
   onload?: () => void;
   onerror?: () => void;
+}
+
+export type ImageRendererProps = {
+  src: string,
+  loading?: React.Node,
+  loaded?: React.Node,
+  errored?: React.Node,
+  children?: ({
+    image?: Image,
+    loaded: boolean,
+    errored: boolean
+  }) => React.Node,
+  onLoad?: () => void,
+  onError?: () => void
 };
 
-export type ImageRenderProps = {
-  src: string;
-  onLoad?: () => void;
-  onError?: () => void;
-  children: ({
-    image?: Image;
-    loaded: boolean;
-    errored: boolean;
-  }) => React.Node;
+export type ImageRendererState = {
+  image?: Image,
+  isLoaded: boolean,
+  isErrored: boolean
 };
 
-export type ImageRenderState = {
-  image?: Image;
-  loaded: boolean;
-  errored: boolean;
-};
-
-export default class ImageRender extends React.Component<ImageRenderProps, ImageRenderState> {
-
-  state: ImageRenderState = {
-    loaded: false,
-    errored: false
+export default class ImageRenderer extends React.Component<
+  ImageRendererProps,
+  ImageRendererState
+> {
+  state: ImageRendererState = {
+    isLoaded: false,
+    isErrored: false
   };
 
   handleLoad = () => {
     const {onLoad} = this.props;
     this.unload();
-    this.setState(
-      {loaded: true},
-      () => {
-        if (onLoad) {
-          onLoad();
-        }
+    this.setState({isLoaded: true}, () => {
+      if (onLoad) {
+        onLoad();
       }
-    );
-  }
+    });
+  };
 
   handleError = () => {
     const {onError} = this.props;
     this.unload();
-    this.setState(
-      {errored: true},
-      () => {
-        if (onError) {
-          onError();
-        }
+    this.setState({isErrored: true}, () => {
+      if (onError) {
+        onError();
       }
-    );
-  }
+    });
+  };
 
   load() {
     const {src} = this.props;
@@ -64,8 +63,8 @@ export default class ImageRender extends React.Component<ImageRenderProps, Image
     this.setState(
       {
         image,
-        loaded: false,
-        errored: false
+        isLoaded: false,
+        isErrored: false
       },
       () => {
         image.onload = this.handleLoad;
@@ -87,7 +86,7 @@ export default class ImageRender extends React.Component<ImageRenderProps, Image
     this.load();
   }
 
-  componentDidUpdate(prevProps: ImageRenderProps) {
+  componentDidUpdate(prevProps: ImageRendererProps) {
     const {src: prevSrc} = prevProps;
     const {src: nextSrc} = this.props;
     if (prevSrc !== nextSrc) {
@@ -101,14 +100,29 @@ export default class ImageRender extends React.Component<ImageRenderProps, Image
   }
 
   render() {
-    const {children} = this.props;
-    const {image, loaded, errored} = this.state;
-    return children({
-      image: loaded ? image : undefined,
-      loaded,
-      errored
-    });
+    const {loading, loaded, errored, children} = this.props;
+    const {image, isLoaded, isErrored} = this.state;
+
+    if (isLoaded && loaded) {
+      return loaded;
+    }
+
+    if (isErrored && errored) {
+      return errored;
+    }
+
+    if (!isLoaded && !isErrored && loading) {
+      return loading;
+    }
+
+    if (children) {
+      return children({
+        image: isLoaded ? image : undefined,
+        loaded: isLoaded,
+        errored: isErrored
+      });
+    }
+
+    return null;
   }
-
 }
-
