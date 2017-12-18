@@ -63,7 +63,7 @@ Called to render something when the image is `loading`, `loaded` or `errored`.
 
 **Parameters:**
 
-* `image` - The `Image` object. This can be used to inspect the `width` and `height` of the image, or it drawn onto a canvas using `ctx.drawImage()`.
+* `image` - The `Image` object. This can be used to inspect the `width` and `height` of the image, or it can be drawn onto a canvas using `ctx.drawImage()`.
 * `loaded` - A `boolean` indicating whether the image has loaded.
 * `errored` - A `boolean` indicating whether the image has errored.
 
