@@ -28,6 +28,35 @@ export type ImageRendererState = {
   isErrored: boolean
 };
 
+function loading(image: Image): $Shape<ImageRendererState> {
+  return {
+    image,
+    isLoaded: false,
+    isErrored: false
+  };
+}
+
+function loaded(): $Shape<ImageRendererState> {
+  return {
+    isLoaded: true
+  };
+}
+
+function errored(): $Shape<ImageRendererState> {
+  return {
+    isErrored: true
+  };
+}
+
+function hasPropsChanged(
+  prevProps: ImageRendererProps,
+  nextProps: ImageRendererProps
+): boolean {
+  const {src: prevSrc} = prevProps;
+  const {src: nextSrc} = nextProps;
+  return prevSrc !== nextSrc;
+}
+
 export default class ImageRenderer extends React.Component<
   ImageRendererProps,
   ImageRendererState
@@ -40,7 +69,7 @@ export default class ImageRenderer extends React.Component<
   handleLoad = () => {
     const {onLoad} = this.props;
     this.unload();
-    this.setState({isLoaded: true}, () => {
+    this.setState(loaded(), () => {
       if (onLoad) {
         onLoad();
       }
@@ -50,7 +79,7 @@ export default class ImageRenderer extends React.Component<
   handleError = () => {
     const {onError} = this.props;
     this.unload();
-    this.setState({isErrored: true}, () => {
+    this.setState(errored(), () => {
       if (onError) {
         onError();
       }
@@ -59,19 +88,13 @@ export default class ImageRenderer extends React.Component<
 
   load() {
     const {src} = this.props;
-    const image = new Image();
-    this.setState(
-      {
-        image,
-        isLoaded: false,
-        isErrored: false
-      },
-      () => {
-        image.onload = this.handleLoad;
-        image.onerror = this.handleError;
-        image.src = src;
-      }
-    );
+    const {image} = this.state;
+
+    if (image) {
+      image.onload = this.handleLoad;
+      image.onerror = this.handleError;
+      image.src = src;
+    }
   }
 
   unload() {
@@ -82,14 +105,22 @@ export default class ImageRenderer extends React.Component<
     }
   }
 
+  componentWillMount() {
+    this.setState(loading(new Image()));
+  }
+
   componentDidMount() {
     this.load();
   }
 
+  componentWillReceiveProps(nextProps: ImageRendererProps) {
+    if (hasPropsChanged(this.props, nextProps)) {
+      this.setState(loading(new Image()));
+    }
+  }
+
   componentDidUpdate(prevProps: ImageRendererProps) {
-    const {src: prevSrc} = prevProps;
-    const {src: nextSrc} = this.props;
-    if (prevSrc !== nextSrc) {
+    if (hasPropsChanged(prevProps, this.props)) {
       this.unload();
       this.load();
     }

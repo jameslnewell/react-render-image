@@ -9,13 +9,19 @@ export default class App extends React.Component {
     src: defaultSrc
   };
 
-  handleSubmit = event => {
+  handleEnterPress = event => {
     if (event.key === 'Enter') {
       event.target.select();
       this.setState({
         src: event.target.value
       });
     }
+  };
+
+  handleButtonClick = event => {
+    this.setState({
+      src: event.target.value
+    });
   };
 
   render() {
@@ -27,10 +33,11 @@ export default class App extends React.Component {
         <br />
         <input
           autoFocus
-          onKeyPress={this.handleSubmit}
+          onKeyPress={this.handleEnterPress}
           defaultValue={defaultSrc}
           style={{width: '340px'}}
         />
+        <button onClick={this.handleButtonClick}>load..</button>
         <Image src={src} loading="🔄" loaded="✅" errored="❌" />
         <br />
 
