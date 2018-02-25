@@ -18311,13 +18311,17 @@ var App = function (_React$Component) {
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
       src: defaultSrc
-    }, _this.handleSubmit = function (event) {
+    }, _this.handleEnterPress = function (event) {
       if (event.key === 'Enter') {
         event.target.select();
         _this.setState({
           src: event.target.value
         });
       }
+    }, _this.handleButtonClick = function (event) {
+      _this.setState({
+        src: event.target.value
+      });
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
@@ -18337,10 +18341,15 @@ var App = function (_React$Component) {
         _react2.default.createElement('br', null),
         _react2.default.createElement('input', {
           autoFocus: true,
-          onKeyPress: this.handleSubmit,
+          onKeyPress: this.handleEnterPress,
           defaultValue: defaultSrc,
           style: { width: '340px' }
         }),
+        _react2.default.createElement(
+          'button',
+          { onClick: this.handleButtonClick },
+          'load..'
+        ),
         _react2.default.createElement(_reactRenderImage2.default, { src: src, loading: '\uD83D\uDD04', loaded: '\u2705', errored: '\u274C' }),
         _react2.default.createElement('br', null),
         _react2.default.createElement(
@@ -18400,6 +18409,33 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function loading(image) {
+  return {
+    image: image,
+    isLoaded: false,
+    isErrored: false
+  };
+}
+
+function loaded() {
+  return {
+    isLoaded: true
+  };
+}
+
+function errored() {
+  return {
+    isErrored: true
+  };
+}
+
+function hasPropsChanged(prevProps, nextProps) {
+  var prevSrc = prevProps.src;
+  var nextSrc = nextProps.src;
+
+  return prevSrc !== nextSrc;
+}
+
 var ImageRenderer = function (_React$Component) {
   _inherits(ImageRenderer, _React$Component);
 
@@ -18421,7 +18457,7 @@ var ImageRenderer = function (_React$Component) {
       var onLoad = _this.props.onLoad;
 
       _this.unload();
-      _this.setState({ isLoaded: true }, function () {
+      _this.setState(loaded(), function () {
         if (onLoad) {
           onLoad();
         }
@@ -18430,7 +18466,7 @@ var ImageRenderer = function (_React$Component) {
       var onError = _this.props.onError;
 
       _this.unload();
-      _this.setState({ isErrored: true }, function () {
+      _this.setState(errored(), function () {
         if (onError) {
           onError();
         }
@@ -18441,20 +18477,15 @@ var ImageRenderer = function (_React$Component) {
   _createClass(ImageRenderer, [{
     key: 'load',
     value: function load() {
-      var _this2 = this;
-
       var src = this.props.src;
+      var image = this.state.image;
 
-      var image = new Image();
-      this.setState({
-        image: image,
-        isLoaded: false,
-        isErrored: false
-      }, function () {
-        image.onload = _this2.handleLoad;
-        image.onerror = _this2.handleError;
+
+      if (image) {
+        image.onload = this.handleLoad;
+        image.onerror = this.handleError;
         image.src = src;
-      });
+      }
     }
   }, {
     key: 'unload',
@@ -18467,17 +18498,26 @@ var ImageRenderer = function (_React$Component) {
       }
     }
   }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.setState(loading(new Image()));
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.load();
     }
   }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (hasPropsChanged(this.props, nextProps)) {
+        this.setState(loading(new Image()));
+      }
+    }
+  }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps) {
-      var prevSrc = prevProps.src;
-      var nextSrc = this.props.src;
-
-      if (prevSrc !== nextSrc) {
+      if (hasPropsChanged(prevProps, this.props)) {
         this.unload();
         this.load();
       }
