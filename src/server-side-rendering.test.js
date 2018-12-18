@@ -4,7 +4,7 @@
 // @flow
 import React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
-import ImageRender from '../src';
+import ImageRender from '.';
 
 describe('Server side rendering', () => {
   it('should not fail when rendered in SSR', () => {
