@@ -106,6 +106,9 @@ export default class ImageRenderer extends React.Component<
   }
 
   componentWillMount() {
+    if (typeof window === 'undefined') {
+      return;
+    }
     this.setState(loading(new Image()));
   }
 
