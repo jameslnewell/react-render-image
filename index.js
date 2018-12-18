@@ -18500,6 +18500,9 @@ var ImageRenderer = function (_React$Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
+      if (typeof window === 'undefined') {
+        return;
+      }
       this.setState(loading(new Image()));
     }
   }, {
