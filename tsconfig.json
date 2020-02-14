@@ -1,0 +1,10 @@
+{
+  "extends": "./node_modules/@jameslnewell/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react",
+    "lib": ["DOM", "ESNext"],
+    "sourceMap": true
+  },
+  "include": ["src", "example"]
+}

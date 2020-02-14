@@ -6,8 +6,10 @@ Render an image in React.
 
 ## Installation
 
-```
+```bash
 npm install --save react-render-image
+// OR
+yarn add react-render-image
 ```
 
 ## Usage
