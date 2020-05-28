@@ -21,8 +21,10 @@ export enum ImageRendererStatus {
 }
 
 const isBrowser = typeof window !== 'undefined';
+
 const isLoaded = (status: ImageRendererStatus): boolean =>
   status === ImageRendererStatus.LOADED;
+
 const isErrored = (status: ImageRendererStatus): boolean =>
   status === ImageRendererStatus.ERRORED;
 
@@ -49,9 +51,7 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
     };
 
     if (isBrowser) {
-      setStatus(ImageRendererStatus.LOADING);
       image.current = isBrowser ? new window.Image() : undefined;
-
       if (image.current) {
         image.current.onload = (): void => {
           unload();
@@ -67,14 +67,16 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
       }
     }
 
-    return () => unload();
+    return () => {
+      unload();
+      setStatus(ImageRendererStatus.LOADING);
+    };
   }, [src]);
 
   React.useEffect(() => {
     if (isLoaded(status) && onLoad) {
       onLoad();
     }
-
     if (isErrored(status) && onError) {
       onError();
     }
