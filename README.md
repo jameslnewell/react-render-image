@@ -39,6 +39,18 @@ import Image from 'react-render-image';
 
 The image URI.
 
+#### srcset
+
+> `string`
+
+The image URIs to use given various conditions. See the [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/srcset) for further detail.
+
+#### sizes
+
+> `string`
+
+The width of the image given various conditions. See the [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/sizes) for further detail.
+
 #### loading
 
 > React.Node
