@@ -2,14 +2,19 @@ import * as React from 'react';
 
 export interface ImageRendererProps {
   src: string;
+  srcset?: HTMLImageElement['srcset'];
+  sizes?: HTMLImageElement['sizes'];
+
   loading?: React.ReactNode;
   loaded?: React.ReactNode;
   errored?: React.ReactNode;
+
   children?: (status: {
     image?: HTMLImageElement;
     loaded: boolean;
     errored: boolean;
   }) => React.ReactNode;
+
   onLoad?: () => void;
   onError?: () => void;
 }
@@ -30,6 +35,8 @@ const isErrored = (status: ImageRendererStatus): boolean =>
 
 const ImageRenderer: React.FC<ImageRendererProps> = ({
   src,
+  srcset,
+  sizes,
   onLoad,
   onError,
   loading: loadingView,
@@ -63,6 +70,8 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
           setStatus(ImageRendererStatus.ERRORED);
         };
 
+        image.current.sizes = sizes || '';
+        image.current.srcset = srcset || '';
         image.current.src = src;
       }
     }
@@ -71,7 +80,7 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
       unload();
       setStatus(ImageRendererStatus.LOADING);
     };
-  }, [src]);
+  }, [src, srcset, sizes]);
 
   React.useEffect(() => {
     if (isLoaded(status) && onLoad) {
