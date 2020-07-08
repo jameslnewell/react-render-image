@@ -6,8 +6,8 @@ const defaultURL = 'https://i.pinimg.com/originals/2e/90/0a/2e900a74a9c7e7babe33
 
 const App: React.FC = () => {
   const srcInput = React.useRef<HTMLInputElement>(null);
-  const srcsetInput = React.useRef<HTMLInputElement>(null);
-  const sizesInput = React.useRef<HTMLInputElement>(null);
+  const srcsetInput = React.useRef<HTMLTextAreaElement>(null);
+  const sizesInput = React.useRef<HTMLTextAreaElement>(null);
   const [props, setProps] = React.useState<Pick<ImageRendererProps, 'src' | 'srcset' | 'sizes'>>({src: defaultURL});
 
   const handleSubmit = (event: React.FormEvent): void => {
@@ -37,7 +37,7 @@ const App: React.FC = () => {
         </div>
         <div>
           <label htmlFor="srcset">srcset</label>
-          <input
+          <textarea
             id="srcset"
             ref={srcsetInput}
             style={{width: '340px'}}
@@ -45,7 +45,7 @@ const App: React.FC = () => {
         </div>
         <div>
           <label htmlFor="sizes">sizes</label>
-          <input
+          <textarea
             id="sizes"
             ref={sizesInput}
             autoFocus
