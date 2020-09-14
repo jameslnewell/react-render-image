@@ -1,5 +1,9 @@
 # Change log
 
+## 3.0.1
+
+- Added `sideEffects` flag for optimal tree-shaking
+
 ## 3.0.0
 
 - Extracted the `useImage({src})` hook from the `Image` component

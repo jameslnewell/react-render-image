@@ -2,7 +2,7 @@ import 'raf/polyfill';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {render} from '@testing-library/react';
-import { UseImageStatus, useImageMock, UseImageResult } from './useImage';
+import { UseImageStatus, useImageMock } from './useImage';
 import { Image } from './Image';
 
 declare module "./useImage" {
