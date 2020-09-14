@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import React from 'react';
-import Image, {ImageRendererProps} from '../src';
+import {Image, ImageProps} from '../src';
 
 const defaultURL = 'https://i.pinimg.com/originals/2e/90/0a/2e900a74a9c7e7babe3343fa9dfd6a06.jpg';
 
@@ -8,7 +8,7 @@ const App: React.FC = () => {
   const srcInput = React.useRef<HTMLInputElement>(null);
   const srcsetInput = React.useRef<HTMLTextAreaElement>(null);
   const sizesInput = React.useRef<HTMLTextAreaElement>(null);
-  const [props, setProps] = React.useState<Pick<ImageRendererProps, 'src' | 'srcset' | 'sizes'>>({src: defaultURL});
+  const [props, setProps] = React.useState<Pick<ImageProps, 'src' | 'srcset' | 'sizes'>>({src: defaultURL});
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();

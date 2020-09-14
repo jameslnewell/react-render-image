@@ -3,3 +3,4 @@
 dist
 example/dist
 node_modules
+tsconfig.tsbuildinfo

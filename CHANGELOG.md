@@ -1,8 +1,16 @@
 # Change log
 
+## 3.0.0
+
+- Extracted the `useImage({src})` hook from the `Image` component
+- Exporting using named exports
+- renamed `ImageRenderer*` to `Image*`
+- switched status to be a string
+- switched bundler to vanilla rollup
+
 ## 2.1.0
 
-- Added support for `srcSet` and `sizes`
+- Added support for `srcset` and `sizes`
 
 ## 2.0.0
 
