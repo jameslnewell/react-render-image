@@ -18,7 +18,9 @@ yarn add react-render-image
 
 ```js
 import React from 'react';
-import Image from 'react-render-image';
+import {Image, useImage} from 'react-render-image';
+
+const {image, loaded, errored} = useImage({src});
 
 <Image src={src} loading="🔄" loaded="✅" errored="❌"/>
 
@@ -31,68 +33,89 @@ import Image from 'react-render-image';
 
 ## API
 
-### Props
+### &lt;Image/&gt;
 
-#### src (required)
+#### Props
+
+##### src (required)
 
 > `string`
 
 The image URI.
 
-#### srcset
+##### srcset
 
 > `string`
 
 The image URIs to use given various conditions. See the [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/srcset) for further detail.
 
-#### sizes
+##### sizes
 
 > `string`
 
 The width of the image given various conditions. See the [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/sizes) for further detail.
 
-#### loading
+##### loading
 
 > React.Node
 
 Rendered when the image is `loading`.
 
-#### loaded
+##### loaded
 
 > React.Node
 
 Rendered when the image is `loaded`.
 
-#### errored
+##### errored
 
 > React.Node
 
 Rendered when the image is `errored`.
 
-#### children
+##### children
 
-> `({ image?: Image; loaded: boolean; errored: boolean; }) => React.Node`
+> `({ image?: Image; status: enum, loaded: boolean; errored: boolean; }) => React.Node`
 
 Called to render something when the image is `loading`, `loaded` or `errored`.
 
 **Parameters:**
 
-* `image` - The `Image` object. This can be used to inspect the `width` and `height` of the image, or it can be drawn onto a canvas using `ctx.drawImage()`.
+* `status` - An enum indicating whether the image is loading, loaded or errored.
 * `loaded` - A `boolean` indicating whether the image has loaded.
 * `errored` - A `boolean` indicating whether the image has errored.
+* `image` - The `Image` object. This can be used to inspect the `width` and `height` of the image, or it can be drawn onto a canvas using `ctx.drawImage()`.
 
 **Returns:**
 
 > `RectNode`
 
-#### onLoad
+##### onLoad
 
 > `() => void`
 
 Called when the image has been loaded.
 
-#### onError
+##### onError
 
 > `() => void`
 
 Called when the image cannot be loaded.
+
+### useImage(options)
+
+> `useImage({ src?: string; srcset: string[]; sizes: string[]; }) => {status, image?: Image}`
+
+**Parameters:**
+
+* `src` - An enum indicating whether the image is loading, loaded or errored.
+* `srcset` - The image URIs to use given various conditions. See the [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/srcset) for further detail.
+* `sizes` - The image URIs to use given various conditions. See the [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/sizes) for further detail.
+
+**Returns:**
+
+> * `status` - An enum indicating whether the image is loading, loaded or errored.
+> * `loaded` - A `boolean` indicating whether the image has loaded.
+> * `errored` - A `boolean` indicating whether the image has errored
+> * `image` - The `Image` object. This can be used to inspect the `width` and `height` of the image, or it can be drawn onto a canvas using `ctx.drawImage()`.
+

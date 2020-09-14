@@ -1,36 +1,24 @@
-import React from 'react';
 import 'raf/polyfill';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import {render} from '@testing-library/react';
-import ImageRender from '.';
+import { UseImageStatus, useImageMock, UseImageResult } from './useImage';
+import { Image } from './Image';
 
-class MockImageLoading {
-  set src(_: string) {
-    /* do nothing */
-  }
-  onload = null;
-  onerror = null;
+declare module "./useImage" {
+  export const useImageMock: jest.Mock<UseImageResult>;
 }
 
-class MockImageLoaded {
-  set src(_: string) {
-    if (this.onload) {
-      this.onload({} as any);
-    }
-  }
-  onload?: Function = undefined;
-  onerror?: Function = undefined;
-}
+jest.mock('./useImage', () => {
+  const useImageModule = jest.requireActual('./useImage');
+  const useImageMock = jest.spyOn(useImageModule, 'useImage');
+  return {
+    ...useImageModule,
+    useImageMock 
+  };
+});
 
-class MockImageErrored {
-  set src(_: string) {
-    if (this.onerror) {
-      this.onerror({} as any);
-    }
-  }
-  onload?: Function = undefined;
-  onerror?: Function = undefined;
-}
-
+const src = "https://example.com/example.jpg";
 const mockComponent1ID = 'component-1';
 const mockComponent2ID = 'component-2';
 const mockComponent3ID = 'component-3';
@@ -47,23 +35,28 @@ const MockComponent3: React.FC = () => {
   return <div data-testid={mockComponent3ID} />;
 };
 
-describe('<ImageRenderer/>', () => {
-  describe('loading:', () => {
+describe('<Image/>', () => {
+  describe('loading', () => {
     beforeEach(() => {
-      (globalThis as any).Image = MockImageLoading;
+      useImageMock.mockReturnValue({
+        status: UseImageStatus.LOADING,
+        loaded: false,
+        errored: false,
+        image: undefined
+      });
     });
 
     test('should render the "loading" node when there is a "loading" node and a render function', () => {
       const fn = jest.fn().mockReturnValue(null);
       const {queryByTestId} = render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           loading={<MockComponent1 />}
           loaded={<MockComponent2 />}
           errored={<MockComponent3 />}
         >
           {fn}
-        </ImageRender>,
+        </Image>,
       );
       expect(queryByTestId(mockComponent1ID)).not.toBeNull();
       expect(queryByTestId(mockComponent2ID)).toBeNull();
@@ -74,44 +67,54 @@ describe('<ImageRenderer/>', () => {
     test('should render the render function when there is no "loading" node and a render function', () => {
       const fn = jest.fn().mockReturnValue(null);
       const {queryByTestId} = render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           loaded={<MockComponent2 />}
           errored={<MockComponent3 />}
         >
           {fn}
-        </ImageRender>,
+        </Image>,
       );
       expect(queryByTestId(mockComponent1ID)).toBeNull();
       expect(queryByTestId(mockComponent2ID)).toBeNull();
       expect(queryByTestId(mockComponent3ID)).toBeNull();
-      expect(fn).toBeCalledWith({loaded: false, errored: false});
+      expect(fn).toBeCalledWith({
+        status: UseImageStatus.LOADING,
+        loaded: false, 
+        errored: false,
+        image: undefined
+      });
     });
 
     test('should render null when there is no "loading" node and no render function', () => {
       const {container} = render(
-        <ImageRender src="https://example.com/example.jpg" />,
+        <Image src={src} />,
       );
       expect(container.children).toHaveLength(0);
     });
   });
 
-  describe('loaded:', () => {
+  describe('loaded', () => {
     beforeEach(() => {
-      (globalThis as any).Image = MockImageLoaded;
+      useImageMock.mockReturnValue({
+        status: UseImageStatus.LOADED,
+        loaded: true,
+        errored: false,
+        image: undefined
+      });
     });
 
     test('should render the "loaded" node when there is a "loaded" node and a render function', async () => {
       const fn = jest.fn().mockReturnValue(null);
       const {queryByTestId} = render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           loading={<MockComponent1 />}
           loaded={<MockComponent2 />}
           errored={<MockComponent3 />}
         >
           {fn}
-        </ImageRender>,
+        </Image>,
       );
       expect(queryByTestId(mockComponent1ID)).toBeNull();
       expect(queryByTestId(mockComponent2ID)).not.toBeNull();
@@ -122,13 +125,13 @@ describe('<ImageRenderer/>', () => {
     test('should render the render function when there is no "loaded" node and a render function', () => {
       const fn = jest.fn().mockReturnValue(null);
       const {queryByTestId} = render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           loading={<MockComponent2 />}
           errored={<MockComponent3 />}
         >
           {fn}
-        </ImageRender>,
+        </Image>,
       );
       expect(queryByTestId(mockComponent1ID)).toBeNull();
       expect(queryByTestId(mockComponent2ID)).toBeNull();
@@ -144,7 +147,7 @@ describe('<ImageRenderer/>', () => {
 
     test('should render null when there is no "loaded" node and no render function', () => {
       const {container} = render(
-        <ImageRender src="https://example.com/example.jpg" />,
+        <Image src={src} />,
       );
       expect(container.children).toHaveLength(0);
     });
@@ -153,8 +156,8 @@ describe('<ImageRenderer/>', () => {
       const onLoad = jest.fn();
       const onError = jest.fn();
       render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           onLoad={onLoad}
           onError={onError}
         />,
@@ -164,22 +167,27 @@ describe('<ImageRenderer/>', () => {
     });
   });
 
-  describe('errored:', () => {
+  describe('errored', () => {
     beforeEach(() => {
-      (globalThis as any).Image = MockImageErrored;
+      useImageMock.mockReturnValue({
+        status: UseImageStatus.ERRORED,
+        loaded: false,
+        errored: true,
+        image: undefined
+      });
     });
 
     test('should render the "errored "node when there is an "errored" node and a render function', () => {
       const fn = jest.fn().mockReturnValue(null);
       const {queryByTestId} = render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           loading={<MockComponent1 />}
           loaded={<MockComponent2 />}
           errored={<MockComponent3 />}
         >
           {fn}
-        </ImageRender>,
+        </Image>,
       );
       expect(queryByTestId(mockComponent1ID)).toBeNull();
       expect(queryByTestId(mockComponent2ID)).toBeNull();
@@ -190,23 +198,28 @@ describe('<ImageRenderer/>', () => {
     test('should render the render function when there is no "errored" node and a render function', () => {
       const fn = jest.fn().mockReturnValue(null);
       const {queryByTestId} = render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           loading={<MockComponent1 />}
           loaded={<MockComponent2 />}
         >
           {fn}
-        </ImageRender>,
+        </Image>,
       );
       expect(queryByTestId(mockComponent1ID)).toBeNull();
       expect(queryByTestId(mockComponent2ID)).toBeNull();
       expect(queryByTestId(mockComponent3ID)).toBeNull();
-      expect(fn).toBeCalledWith({loaded: false, errored: true});
+      expect(fn).toBeCalledWith({      
+        status: UseImageStatus.ERRORED,
+        loaded: false, 
+        errored: true,
+        image: undefined
+      });
     });
 
     test('should render null when there is no "errored" node and no render function', () => {
       const {container} = render(
-        <ImageRender src="https://example.com/example.jpg" />,
+        <Image src={src} />,
       );
       expect(container.children).toHaveLength(0);
     });
@@ -215,8 +228,8 @@ describe('<ImageRenderer/>', () => {
       const onLoad = jest.fn();
       const onError = jest.fn();
       render(
-        <ImageRender
-          src="https://example.com/example.jpg"
+        <Image
+          src={src}
           onLoad={onLoad}
           onError={onError}
         />,
@@ -227,19 +240,37 @@ describe('<ImageRenderer/>', () => {
   });
 
   test('should load a new image when a "src" is changed', async () => {
-    (globalThis as any).Image = MockImageErrored;
+    useImageMock.mockReturnValue({
+      status: UseImageStatus.ERRORED,
+      loaded: false,
+      errored: true,
+      image: undefined
+    });
     const fn = jest.fn().mockReturnValue(null);
     const {rerender} = render(
-      <ImageRender src="https://example.com/a.jpg">{fn}</ImageRender>,
+      <Image src="https://example.com/a.jpg">{fn}</Image>,
     );
     expect(fn).toBeCalledWith(
       expect.objectContaining({loaded: false, errored: true}),
     );
-    (globalThis as any).Image = MockImageLoaded;
+    useImageMock.mockReturnValue({
+      status: UseImageStatus.LOADED,
+      loaded: true,
+      errored: false,
+      image: undefined
+    });
     fn.mockClear();
-    rerender(<ImageRender src="https://example.com/b.jpg">{fn}</ImageRender>);
+    rerender(<Image src="https://example.com/b.jpg">{fn}</Image>);
     expect(fn).toBeCalledWith(
       expect.objectContaining({loaded: true, errored: false}),
     );
+  });
+
+  test('does not throw when SSR', () => {
+    expect(() =>
+      ReactDOMServer.renderToString(
+        <Image src={src} />,
+      ),
+    ).not.toThrowError();
   });
 });
